@@ -47,6 +47,20 @@ public class AccountService {
         return mapToResponse(savedAccount);
     }
 
+    public AccountResponse getAccount(String accountNumber) {
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new RuntimeException("Account number doesn't exists"));
+
+        return mapToResponse(account);
+    }
+
+    public BigDecimal getBalance(String accountNumber) {
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new RuntimeException("Account number doesn't exists"));
+
+        return account.getBalance();
+    }
+
     // method to generate unique 12 digit number
     private String generateAccountNumber() {
 
