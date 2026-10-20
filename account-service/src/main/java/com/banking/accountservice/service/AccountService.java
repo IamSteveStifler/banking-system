@@ -61,6 +61,63 @@ public class AccountService {
         return account.getBalance();
     }
 
+    /**
+     * called by fraud detection service
+     * to block the account if fraud detected
+     * @param accountNumber
+     */
+
+    public void blockAccount(String accountNumber) {
+        log.info("Blocking account: {}", accountNumber);
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new RuntimeException("Account number doesn't exists"));
+
+        account.setAccountStatus(AccountStatus.BLOCKED);
+        accountRepository.save(account);
+        log.info("Account blocked: {}", accountNumber);
+    }
+
+    /**
+     * method to deduct balance from sender account
+     * caller - transaction service
+     * @param accountNumber
+     * @param amount
+     */
+    public void deductBalance(String accountNumber, BigDecimal amount) {
+        log.info("Deducting balance: {}", accountNumber);
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new RuntimeException("Account number doesn't exists"));
+
+        if(account.getAccountStatus() != AccountStatus.ACTIVE) {
+            throw new RuntimeException("Account is not active");
+        }
+
+        if(account.getBalance().compareTo(amount) < 0) {
+            throw new RuntimeException("Insufficient funds for account number: " + accountNumber);
+        }
+
+        account.setBalance(account.getBalance().subtract(amount));
+        accountRepository.save(account);
+        log.info("Balance debited. New balance: {}", account.getBalance());
+    }
+
+
+    /**
+     * method to credit balance in the account
+     * produced by transaction service through Kafka
+     * @param accountNumber
+     * @param amount
+     */
+    public void creditBalance(String accountNumber, BigDecimal amount) {
+        log.info("Crediting {} to account {}", amount, accountNumber);
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new RuntimeException("Account number doesn't exists"));
+
+        account.setBalance(account.getBalance().add(amount));
+        accountRepository.save(account);
+        log.info("Amount credited to the account number {}. New balance {}", accountNumber, account.getBalance());
+    }
+
     // method to generate unique 12 digit number
     private String generateAccountNumber() {
 
