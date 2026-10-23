@@ -1,3 +1,7 @@
 spring:
   application:
     name: fraud-detection-service
+fraud:
+  max-transaction-per-minute: 5
+  threshold-multiplier: 5
+  maxAmountPercentage: 0.90
