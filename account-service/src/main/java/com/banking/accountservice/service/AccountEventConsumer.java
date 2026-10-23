@@ -27,7 +27,7 @@ public class AccountEventConsumer {
             @Payload Map<String, Object> payload) {
 
         try {
-            String receiverAccount = (String) payload.get("receiverAccount");
+            String receiverAccount = (String) payload.get("receiverAccountNumber");
             BigDecimal amount = new BigDecimal(payload.get("amount").toString());
 
             log.info("Crediting account: {} with amount: {}", receiverAccount, amount);

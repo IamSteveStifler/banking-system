@@ -62,7 +62,7 @@ public class TransactionEventConsumer {
 
             // storing in redis
             String otpKey = "verification:otp" + transactionId;
-            redisTemplate.opsForValue().set(otpKey, otpKey, OTP_EXPIRATION_MINUTES, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(otpKey, otp, OTP_EXPIRATION_MINUTES, TimeUnit.MINUTES);
 
             transaction.setStatus(TransactionStatus.PENDING_VERIFICATION);
             transactionRepository.save(transaction);
@@ -74,7 +74,7 @@ public class TransactionEventConsumer {
             otpEvent.put("accountNumber", accountNumber);
             otpEvent.put("amount", payload.get("amount"));
             otpEvent.put("reason", payload.get("reason"));
-            otpEvent.put("otp", payload.get("otp"));
+            otpEvent.put("otp", otp);
 
             kafkaTemplate.send(OTP_VERIFICATION_TOPIC, transactionId, otpEvent);
 
