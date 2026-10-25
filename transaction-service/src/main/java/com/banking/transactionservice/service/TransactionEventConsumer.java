@@ -23,6 +23,7 @@ public class TransactionEventConsumer {
 
 
     private final TransactionRepository transactionRepository;
+    private final TransactionService transactionService;
     private final RedisTemplate<String, String> redisTemplate;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
@@ -81,6 +82,23 @@ public class TransactionEventConsumer {
         } catch (Exception e) {
             log.error("Error occurred in otp generation {}", e.getMessage());
         }
+
+    }
+
+    @KafkaListener(topics = "fraud.check.clean")
+    public void consumeFraudCleanCheckResult(
+        @Payload Map<String, Object> payload) {
+
+        try {
+            String transactionId = (String) payload.get("transactionId");
+
+            transactionService.processCleanTransaction(transactionId);
+
+        } catch (Exception e) {
+            log.error("Error processing clean check transaction {}, {}",
+                    payload.get("transactionId") ,e.getMessage());
+        }
+
 
     }
 

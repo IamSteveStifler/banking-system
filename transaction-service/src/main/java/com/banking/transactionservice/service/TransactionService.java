@@ -136,6 +136,21 @@ public class TransactionService {
         return mapToResponse(transaction);
     }
 
+    public void processCleanTransaction(String transactionId) {
+        log.info("Processing clean transaction: {}", transactionId);
+
+        Transaction transaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new RuntimeException("transaction not found with id: " + transactionId));
+
+        if(transaction.getStatus() != TransactionStatus.PROCESSING) {
+            log.warn("Transaction: {} is not in processing state so rolling back", transactionId);
+            return;
+        }
+
+        completeTransaction(transaction);
+
+    }
+
     private void compensateTransaction(Transaction transaction, String reason) {
         log.warn("SAGA COMPENSATION - refunding: {} amount {}", transaction.getSenderAccountNumber(), transaction.getAmount());
 
