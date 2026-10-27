@@ -8,7 +8,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: account-service-group
+      group-id: fraud-service-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
@@ -25,13 +25,13 @@ spring:
                 type: java.util.HashMap
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerialize
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 fraud:
   max-transaction-per-minute: 5
   threshold-multiplier: 5
   maxAmountPercentage: 0.90
 
-serer:
+server:
   port: 8084
 
 account:
