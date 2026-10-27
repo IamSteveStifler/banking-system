@@ -135,6 +135,7 @@ public class AccountService {
         return AccountResponse.builder()
                 .id(account.getId())
                 .accountHolderName(account.getAccountHolderName())
+                .accountNumber(account.getAccountNumber())
                 .email(account.getEmail())
                 .phone(account.getPhone())
                 .accountType(account.getAccountType())

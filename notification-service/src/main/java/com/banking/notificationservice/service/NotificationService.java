@@ -19,9 +19,9 @@ public class NotificationService {
         try {
             String transactionId = (String) payload.get("transactionId");
             String accountNumber = (String) payload.get("accountNumber");
-            String amount = (String) payload.get("amount");
+            String amount = payload.get("amount").toString();
             String reason = (String) payload.get("reason");
-            String otp = (String) payload.get("otp");
+            String otp = payload.get("otp").toString();
 
             sendAlert(accountNumber,
                     "TRANSACTION VERIFICATION REQUIRED",
@@ -30,8 +30,8 @@ public class NotificationService {
                             "Reason: %s" +
                             "A transaction of %s is pending verification. " +
                             "Your OTP is: %s. valid for 5 minutes. "+
-                            "If this wasn't you please ignore."
-                    ).formatted(reason, amount, otp)
+                            "If this wasn't you please ignore.", reason, amount, otp
+                    )
             );
         } catch (Exception e) {
             log.error("Error sending otp notification {}", e.getMessage());
@@ -46,7 +46,7 @@ public class NotificationService {
 
             String senderAccountNumber = (String) payload.get("senderAccountNumber");
             String receiverAccountNumber = (String) payload.get("receiverAccountNumber");
-            String amount = (String) payload.get("amount");
+            String amount = payload.get("amount").toString();
 
             // debited account notification
             sendAlert(
@@ -102,7 +102,7 @@ public class NotificationService {
         try {
 
             String senderAccountNumber = (String) payload.get("senderAccountNumber");
-            String amount = (String) payload.get("amount");
+            String amount = payload.get("amount").toString();
             String reason = (String) payload.get("reason");
 
             sendAlert(
@@ -128,7 +128,7 @@ public class NotificationService {
         try {
 
             String accountNumber = (String) payload.get("accountNumber");
-            String amount = (String) payload.get("amount");
+            String amount = payload.get("amount").toString();
             String razorpayPaymentId = (String) payload.get("razorpayPaymentId");
 
             sendAlert(
@@ -153,7 +153,7 @@ public class NotificationService {
         try {
 
             String accountNumber = (String) payload.get("accountNumber");
-            String amount = (String) payload.get("amount");
+            String amount = payload.get("amount").toString();
             String reason = (String) payload.get("reason");
 
             sendAlert(
